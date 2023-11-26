@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block content %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<!-- 引入 ECharts -->
+<script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.1.2/echarts.min.js"></script>
+<!-- 引入 ECharts Wordcloud 扩展 -->
+<script src="https://cdn.bootcdn.net/ajax/libs/echarts-wordcloud/2.0.0/echarts-wordcloud.min.js"></script>
+
+<style>
+    .chart-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px; /* 或者你需要的任何间距 */
+    }
+</style>
+
+{% autoescape off %}
+    <div class="chart-container">
+        <!-- 显示主题饼图 -->
+        {{ theme_pie_chart_div|safe }}
+    </div>
+
+    <div class="chart-container">
+        <!-- 显示线路饼图 -->
+        {{ line_pie_chart_div|safe }}
+    </div>
+
+    <div class="chart-container">
+        <!-- 显示车站饼图 -->
+        {{ station_pie_chart_div|safe }}
+    </div>
+    
+    <div class="chart-container">
+        <!-- 显示词云图 -->
+        {{ wordcloud_html|safe }}
+    </div>
+    
+{% endautoescape %}
+
+{% endblock %}

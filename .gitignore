@@ -1,0 +1,6 @@
+/files
+/db.sqlite3
+/Archives_zhuhaiyan/__pycache__
+/archives_app/__pycache__
+/archives_app/migrations
+/archives_app/utils/__pycache__

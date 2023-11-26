@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat with GPT-3.5</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        #chat-box {
+            width: 80%;
+            height: 300px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: scroll;
+        }
+        #user-input {
+            width: 70%;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-box"></div>
+    <input type="text" id="user-input" placeholder="输入您的问题...">
+    <button onclick="sendMessage()">发送</button>
+
+<script>
+    var userId = '{{ user_id }}';  // 从 Django 模板中获取 user_id
+    var url = '/openai/' + userId + '/';
+    function sendMessage() {
+        var userInput = $('#user-input').val();
+        $('#chat-box').append('<div>您: ' + userInput + '</div>');
+
+        $.ajax({
+            url: '/openai/' + userId + '/',  // 确保这与您的 Django URL 路径匹配
+            type: 'POST',
+            data: { user_input: userInput },
+            success: function(response) {
+                $('#chat-box').append('<div>GPT-3.5: ' + response.choices[0].text + '</div>');
+            },
+            error: function() {
+                $('#chat-box').append('<div>错误: 无法获取响应。</div>');
+            }
+        });
+
+        $('#user-input').val('');  // 清空输入框
+    }
+</script>
+
+</body>
+</html>

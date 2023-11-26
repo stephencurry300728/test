@@ -1,0 +1,142 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 居中-->
+        <div class="col-md-offset-1 col-md-10">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><a href=http://127.0.0.1:8000>档案管理系统 </a></h3>
+                </div>
+
+                    <div class="panel-body">
+                         <!-- home.html -->
+                        <form id="form1" method="get"  style="margin-bottom: 0px;">
+
+                            {#  查询第一行 div   display和justify-content调整布局居中，两端对齐等  #}
+                            <div style="height:34px;width:100%;display:flex;justify-content: space-around;">
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">案例编号</span>
+                                    <input type="text" class="form-control" aria-describedby="basic-addon1" name="num" id="num">
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">名称</span>
+                                    <input type="text" class="form-control" width="150px"
+                                           aria-describedby="basic-addon1" name="name"  id="name">
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">线路</span>
+                                    <input type="text" class="form-control" aria-describedby="basic-addon1" name="line" id="line">
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">车站</span>
+                                    <input type="text" class="form-control" aria-describedby="basic-addon1" name="station" id="station">
+                                </div>
+                            </div>
+                            <br>
+
+                            {# 查询第二行 div#}
+                            <div style="height:34px;width:100%;display:flex;justify-content: space-around;">
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">主&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;题</span>
+                                    <input type="text" class="form-control" aria-describedby="basic-addon1" name="theme" id="theme">
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">特色</span>
+                                    <input type="text" class="form-control" aria-describedby="basic-addon1" name="characteristic" id="characteristic">
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">成效</span>
+                                    <input type="text" class="form-control" aria-describedby="basic-addon1" name="effect" id="effect">
+                                </div>
+                                <div class="input-group">
+                                    <div style="display:flex;justify-content: space-between;">
+                                        <button type="submit" id="commit_btn" class="btn btn-warning"style="width: 86px">查询
+                                        </button>
+                                        <input type="reset" value="重置" class="btn btn-warning" style="width: 86px">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <br>
+
+
+                        {# 上传和删除 #}
+                        <div class="container">
+                            <div class="row" style="height: 36px; margin-left: 0px;">
+                                <!-- 左侧的两个表单 -->
+                                <div class="col-md-8" >
+                                    <!-- 用于上传文件夹的表单 -->
+                                    <form action="{% url 'archives_generate_view' %}" method="post" enctype="multipart/form-data" class="upload-form" style="display: inline-block; margin-right: 10px;">
+                                        {% csrf_token %}
+                                        <label for="folder-input" class="btn btn-success">选择文件夹并上传</label>
+                                        <input id="folder-input" type="file" multiple webkitdirectory name="file" class="file-input" style="display: none;" onchange="this.form.submit()">
+                                    </form>
+                                    <!-- 用于上传批量文件的表单 -->
+                                    <form action="{% url 'archives_generate_view' %}" method="post" enctype="multipart/form-data" class="upload-form" style="display: inline-block;">
+                                        {% csrf_token %}
+                                        <label for="file-input" class="btn btn-primary">选择文件并上传</label>
+                                        <input id="file-input" type="file" multiple name="file" class="file-input" style="display: none;" onchange="this.form.submit()">
+                                    </form>
+                                </div>
+                                <!-- 右侧的链接 -->
+                                
+                                <div class="col-md-4">
+                                    <a href="{% url 'archives_export' %}" class="btn btn-primary " >数据导出到本地</a>
+                                    <a href="{% url 'delete_all_view' %}" class="btn btn-danger" onclick="return confirm('确定删除全部档案吗？');">删除全部档案</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    {# 搜索结果展示Table #}
+                    <table class="table table-striped table-hover" style="table-layout: auto" id="myTable">
+
+                        <thead class="thead-list">
+                            <tr>
+                            {% for col in columns %}
+                                <th>{{ col }}</th>
+                            {% endfor %}
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for obj in archives_queryset %}
+                            <tr>
+                                <td>{{ obj.num }}</td>
+                                <td>{{ obj.name }}</td>
+                                <td>{{ obj.line }}</td>
+                                <td>{{ obj.station }}</td>
+                                <td>{{ obj.theme }}</td>
+                                <td>{{ obj.characteristic }}</td>
+                                <td>{{ obj.effect }}</td>
+                                <td>
+                                    <a class="btn btn-primary btn-xs btn-archives" href="/archives_edit/{{ obj.id }}/edit/">编辑</a>
+                                    <a class="btn btn-danger btn-xs btn-archives" href="/archives_delete/{{ obj.id }}" onclick="return confirm('确定删除该档案吗？');">删除</a>
+                                    <a class="btn btn-info btn-xs btn-archives btn-download" href="/archives_download/{{ obj.id }}">下载</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            </div>
+            <!-- FlexBox分页实现各个搜索结果均在居中 -->
+            <div class="pagination-container">
+                <ul class='pagination'>
+                    {{ page_string }}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+</body>
+
+</html>
