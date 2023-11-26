@@ -85,7 +85,7 @@ def archives_edit(request, edit_id):
 
 def convert_to_docx(file_path, original_file_name):
     ''' 将 .doc 文件转换为 .docx 文件并返回新文件的路径'''
-    # # 处理中文文件名的编码问题
+    # 处理中文文件名的编码问题
     original_file_name_utf8 = original_file_name.encode('utf-8', errors='ignore').decode('utf-8')
     base_file_name = os.path.splitext(original_file_name_utf8)[0]
     docx_file_name = f"{base_file_name}.docx"
