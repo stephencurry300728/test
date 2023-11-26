@@ -31,8 +31,6 @@ from .forms import ArchiveModelForm  # 使用ModelForm组件来处理表单校�
 from .utils.pagination import Pagination  # 自定义分页组件
 from archives_app import models  # 导入模型用于数据库操作
 
-
-
 def home(request, pages=1):
     # 初始化查询条件
     query = Q()
